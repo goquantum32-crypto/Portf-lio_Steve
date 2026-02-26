@@ -1,11 +1,12 @@
 import React from 'react';
 import { CONTACT_INFO } from '../constants';
-import { MapPin, Phone, Mail, Copy } from 'lucide-react';
+import { MapPin, Phone, Mail, Copy, ExternalLink, Send } from 'lucide-react';
 
 const Contact: React.FC = () => {
   const [copied, setCopied] = React.useState(false);
 
-  const copyEmail = () => {
+  const copyEmail = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Previne que abra o mailto se clicar no botão de copiar
     navigator.clipboard.writeText(CONTACT_INFO.email);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -24,39 +25,58 @@ const Contact: React.FC = () => {
 
         <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
           {/* Location */}
-          <div className="flex flex-col items-center p-6 bg-slate-50 rounded-xl text-center hover:shadow-md transition-shadow">
-            <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mb-4">
-              <MapPin size={24} />
+          <div className="flex flex-col items-center p-8 bg-slate-50 rounded-2xl text-center border border-slate-100 hover:shadow-lg transition-all duration-300">
+            <div className="w-14 h-14 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mb-6">
+              <MapPin size={28} />
             </div>
-            <h3 className="font-bold text-slate-900 mb-2">Localização</h3>
-            <p className="text-slate-600">{CONTACT_INFO.location}</p>
+            <h3 className="font-bold text-slate-900 text-lg mb-2">Localização</h3>
+            <p className="text-slate-600 leading-relaxed">{CONTACT_INFO.location}</p>
           </div>
 
-          {/* Phone */}
-          <div className="flex flex-col items-center p-6 bg-slate-50 rounded-xl text-center hover:shadow-md transition-shadow">
-            <div className="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-4">
-              <Phone size={24} />
+          {/* Phone - Clickable Card */}
+          <a 
+             href={`tel:${CONTACT_INFO.phone[0].replace(/\s/g, '')}`}
+             className="flex flex-col items-center p-8 bg-slate-50 rounded-2xl text-center border border-slate-100 hover:shadow-lg transition-all duration-300 hover:border-green-200 group cursor-pointer"
+          >
+            <div className="w-14 h-14 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+              <Phone size={28} />
             </div>
-            <h3 className="font-bold text-slate-900 mb-2">Telefone</h3>
-            <div className="flex flex-col gap-1">
+            <h3 className="font-bold text-slate-900 text-lg mb-2">Telefone</h3>
+            <div className="flex flex-col gap-2">
               {CONTACT_INFO.phone.map((num, idx) => (
-                <a key={idx} href={`tel:${num.replace(/\s/g, '')}`} className="text-slate-600 hover:text-primary-600 transition-colors">
+                <span key={idx} className="text-slate-600 group-hover:text-green-700 font-medium transition-colors">
                   {num}
-                </a>
+                </span>
               ))}
             </div>
-          </div>
-
-          {/* Email */}
-          <div className="flex flex-col items-center p-6 bg-slate-50 rounded-xl text-center hover:shadow-md transition-shadow group cursor-pointer" onClick={copyEmail}>
-            <div className="w-12 h-12 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mb-4 group-hover:bg-purple-200 transition-colors">
-              <Mail size={24} />
-            </div>
-            <h3 className="font-bold text-slate-900 mb-2">Email</h3>
-            <p className="text-slate-600 mb-2 break-all">{CONTACT_INFO.email}</p>
-            <span className="text-xs text-primary-500 font-medium flex items-center">
-              {copied ? 'Copiado!' : <span className="flex items-center"><Copy size={12} className="mr-1" /> Clique para copiar</span>}
+            <span className="mt-4 text-xs text-green-600 font-bold uppercase tracking-wide opacity-0 group-hover:opacity-100 transition-opacity">
+              Ligar Agora
             </span>
+          </a>
+
+          {/* Email - Clickable with Copy Option */}
+          <div className="relative flex flex-col items-center p-8 bg-slate-50 rounded-2xl text-center border border-slate-100 hover:shadow-lg transition-all duration-300 hover:border-purple-200 group">
+            <div className="w-14 h-14 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mb-6">
+              <Mail size={28} />
+            </div>
+            <h3 className="font-bold text-slate-900 text-lg mb-2">Email</h3>
+            <p className="text-slate-600 mb-6 break-all px-2">{CONTACT_INFO.email}</p>
+            
+            <div className="flex gap-2 w-full px-4">
+              <a 
+                href={`mailto:${CONTACT_INFO.email}`} 
+                className="flex-1 flex items-center justify-center gap-2 py-2 px-4 bg-purple-600 text-white text-sm font-bold rounded-lg hover:bg-purple-700 transition-colors"
+              >
+                <Send size={14} /> Enviar
+              </a>
+              <button 
+                onClick={copyEmail}
+                className="flex items-center justify-center p-2 bg-white border border-slate-300 text-slate-600 rounded-lg hover:bg-slate-50 transition-colors"
+                title="Copiar Email"
+              >
+                {copied ? <span className="text-green-600 font-bold text-xs">Copiado</span> : <Copy size={16} />}
+              </button>
+            </div>
           </div>
         </div>
 

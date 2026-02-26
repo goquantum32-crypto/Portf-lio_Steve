@@ -21,6 +21,25 @@ const Navbar: React.FC = () => {
     { name: 'Contactos', href: '#contact' },
   ];
 
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    setIsOpen(false);
+    const targetId = href.replace('#', '');
+    const element = document.getElementById(targetId);
+    
+    if (element) {
+      e.preventDefault();
+      const headerOffset = 80;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.scrollY - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth"
+      });
+    }
+    // Se o elemento não for encontrado, o link segue o comportamento padrão (href)
+  };
+
   return (
     <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'bg-white/95 backdrop-blur-md shadow-md py-2' : 'bg-transparent py-4'}`}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -38,6 +57,7 @@ const Navbar: React.FC = () => {
               <a
                 key={link.name}
                 href={link.href}
+                onClick={(e) => handleNavClick(e, link.href)}
                 className={`text-sm font-medium hover:text-opacity-80 transition-colors ${scrolled ? 'text-slate-600 hover:text-blue-600' : 'text-slate-300 hover:text-cyan-400'}`}
               >
                 {link.name}
@@ -58,12 +78,12 @@ const Navbar: React.FC = () => {
 
         {/* Mobile Menu Dropdown */}
         {isOpen && (
-          <div className="md:hidden absolute top-full left-0 w-full bg-white shadow-lg border-t border-slate-100 py-4 px-4 flex flex-col space-y-4">
+          <div className="md:hidden absolute top-full left-0 w-full bg-white shadow-lg border-t border-slate-100 py-4 px-4 flex flex-col space-y-4 animate-in slide-in-from-top-5 duration-200">
             {navLinks.map((link) => (
               <a
                 key={link.name}
                 href={link.href}
-                onClick={() => setIsOpen(false)}
+                onClick={(e) => handleNavClick(e, link.href)}
                 className="text-slate-600 hover:text-blue-600 font-medium py-2 border-b border-slate-50 last:border-0"
               >
                 {link.name}
