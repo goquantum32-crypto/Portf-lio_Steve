@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Mail, ChevronDown, Camera, Terminal, Lock, X, Check } from 'lucide-react';
 import { PROFILE_DATA } from '../constants';
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { storage } from '../src/firebase';
 
 const Hero: React.FC = () => {
   const [imageSrc, setImageSrc] = useState(PROFILE_DATA.profileImagePlaceholder);
@@ -13,15 +15,12 @@ const Hero: React.FC = () => {
   useEffect(() => {
     const fetchImage = async () => {
       try {
-        const response = await fetch('/api/profile-image');
-        if (response.ok) {
-          const data = await response.json();
-          if (data.image) {
-            setImageSrc(data.image);
-          }
-        }
+        const imageRef = ref(storage, 'profile_images/current.jpg');
+        const url = await getDownloadURL(imageRef);
+        setImageSrc(url);
       } catch (error) {
-        console.error('Failed to fetch profile image:', error);
+        console.error('Failed to fetch profile image from Firebase:', error);
+        // Fallback to placeholder if not found or error
       }
     };
     fetchImage();
@@ -49,25 +48,23 @@ const Hero: React.FC = () => {
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
+      // Optimistic update
       const reader = new FileReader();
-      reader.onloadend = async () => {
-        const base64Image = reader.result as string;
-        setImageSrc(base64Image);
-        
-        // Save to backend
-        try {
-          await fetch('/api/profile-image', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ image: base64Image }),
-          });
-        } catch (error) {
-          console.error('Failed to save profile image:', error);
-        }
+      reader.onloadend = () => {
+        setImageSrc(reader.result as string);
       };
       reader.readAsDataURL(file);
+
+      // Upload to Firebase
+      try {
+        const imageRef = ref(storage, 'profile_images/current.jpg');
+        await uploadBytes(imageRef, file);
+        const url = await getDownloadURL(imageRef);
+        setImageSrc(url); // Update with actual URL
+      } catch (error) {
+        console.error('Failed to upload profile image to Firebase:', error);
+        alert('Erro ao carregar a imagem. Verifique sua conexão ou permissões.');
+      }
     }
   };
 
