@@ -7,7 +7,7 @@ export const PROFILE_DATA = {
   role: "Tecnologia • Administração • Serviços",
   headline: "Licenciado em Administração de Sistemas de Informação e Redes",
   // IMPORTANTE: Salve a sua foto na pasta do projeto com o nome "foto-perfil.png"
-  profileImagePlaceholder: "./foto-perfil.png", 
+  profileImagePlaceholder: "https://i.ibb.co/yBVG5yDJ/Whats-App-Image-2026-06-25-at-15-09-38.jpg", 
   about: `Sou finalista da Licenciatura em Administração de Sistemas de Informação e Redes, com experiência prática em tecnologia, serviços, logística e atendimento ao cliente.
   
   Possuo forte capacidade de adaptação, disciplina no trabalho e facilidade em aprender rapidamente novas ferramentas e sistemas. Ao longo da minha trajetória, desenvolvi competências tanto na área tecnológica quanto em atividades operacionais, gestão de pequenos negócios e suporte ao cliente.
@@ -33,7 +33,7 @@ export const EXPERIENCE_DATA: ExperienceItem[] = [
   },
   {
     role: "Assistente de Mecânica",
-    company: "Oficina Automóvel",
+    company: "LN Transportes",
     icon: 'wrench',
     description: [
       "Apoio em manutenção e reparação de veículos",
