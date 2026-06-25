@@ -24,3 +24,10 @@ export interface ContactInfo {
   phone: string[];
   email: string;
 }
+
+export interface ProjectItem {
+  title: string;
+  description: string;
+  link: string;
+  tags: string[];
+}

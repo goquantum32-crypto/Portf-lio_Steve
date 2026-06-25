@@ -1,5 +1,5 @@
 import React from 'react';
-import { ExperienceItem, SkillCategory, EducationItem, ContactInfo } from './types';
+import { ExperienceItem, SkillCategory, EducationItem, ContactInfo, ProjectItem } from './types';
 import { Car, Wrench, Package, Briefcase, Database, Terminal, FileText, Users, Clock, ShieldCheck } from 'lucide-react';
 
 export const PROFILE_DATA = {
@@ -115,6 +115,15 @@ export const LANGUAGES = [
   { name: "Português", level: "Fluente" },
   { name: "Changana", level: "Fluente" },
   { name: "Inglês", level: "Básico" }
+];
+
+export const PROJECTS_DATA: ProjectItem[] = [
+  {
+    title: "Auto Venda MZ",
+    description: "Plataforma de venda de automóveis, proporcionando uma interface de busca, visualização de detalhes e contacto direto para facilitar a negociação de veículos em Moçambique.",
+    link: "https://auto-venda-mz.vercel.app/",
+    tags: ["Web App", "Frontend", "Catálogo", "Vendas"]
+  }
 ];
 
 export const CONTACT_INFO: ContactInfo = {
